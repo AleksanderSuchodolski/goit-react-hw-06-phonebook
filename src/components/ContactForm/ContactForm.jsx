@@ -1,60 +1,91 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { Form, Input, Label, ButtonAdd } from './ContactForm.styled';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, getPhoneBookValue } from 'redux/phoneBookSlice';
+import { nanoid } from 'nanoid';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-export class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export const ContactForm = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const phoneBook = useSelector(getPhoneBookValue);
 
-  onSubmitAddContact = evt => {
+  const onSubmitAddContact = evt => {
     evt.preventDefault();
-    this.props.onSubmit(this.state);
-    this.reset();
+
+    const data = { name, number };
+    const obj = { ...data, id: nanoid() };
+
+    if (newName(phoneBook, obj) !== undefined) {
+      Notify.warning(`${obj.name} is already in contacts`, {
+        width: '300px',
+        position: 'right-top',
+        timeout: 2000,
+        fontSize: '20px',
+      });
+      reset();
+      return;
+    }
+
+    dispatch(addContact(obj));
+
+    reset();
   };
 
-  onChangeInput = evt => {
-    const { name, value } = evt.currentTarget;
-    this.setState({ [name]: value });
-  };
-
-  reset = () =>
-    this.setState({
-      name: '',
-      number: '',
-    });
-
-  render() {
-    const { name, number } = this.state;
-
-    return (
-      <Form onSubmit={this.onSubmitAddContact}>
-        <Label>
-          Name
-          <Input
-            type="text"
-            name="name"
-            value={name}
-            pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            title="Name may contain only letters, apostrophe, dash and spaces"
-            required
-            onChange={this.onChangeInput}
-          />
-        </Label>
-        <Label>
-          Phone number
-          <Input
-            type="tel"
-            name="number"
-            value={number}
-            pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
-            title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-            required
-            onChange={this.onChangeInput}
-          />
-        </Label>
-        <ButtonAdd type="submit">Add contact</ButtonAdd>
-      </Form>
+  const newName = (phoneBook, obj) => {
+    return phoneBook.find(
+      ({ name }) => name.toLowerCase() === obj.name.toLowerCase()
     );
-  }
-}
+  };
+
+  const onChangeInput = evt => {
+    const { name, value } = evt.currentTarget;
+
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
+
+  return (
+    <Form onSubmit={onSubmitAddContact}>
+      <Label>
+        Name
+        <Input
+          type="text"
+          name="name"
+          value={name}
+          pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          title="Name may contain only letters, apostrophe, dash and spaces"
+          required
+          onChange={onChangeInput}
+        />
+      </Label>
+      <Label>
+        Phone number
+        <Input
+          type="tel"
+          name="number"
+          value={number}
+          pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
+          title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
+          required
+          onChange={onChangeInput}
+        />
+      </Label>
+      <ButtonAdd type="submit">Add contact</ButtonAdd>
+    </Form>
+  );
+};
