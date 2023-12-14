@@ -23,7 +23,7 @@ export const ContactList = () => {
           <p>
             {name}: {number}
           </p>
-          <ButtonRemowe typ="button" onClick={() => delContact(id)}>
+          <ButtonRemowe typ="button" onClick={() => deleteContact(id)}>
             Delete
           </ButtonRemowe>
         </Contact>
