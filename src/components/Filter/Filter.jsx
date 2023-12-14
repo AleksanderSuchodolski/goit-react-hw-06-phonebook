@@ -3,8 +3,8 @@ import { LabelSearch, InputSearch } from './Filter.styled';
 import { filterSet, getFilter } from '../../redux/filterSlice';
 
 export const Filter = () => {
-  const dispatch = useDispatch;
-  const filterPhonebook = useSelector(getFilter);
+  const dispatch = useDispatch();
+  const filterPhoneBook = useSelector(getFilter);
 
   const onChangeFilter = evt => {
     const { value } = evt.currentTarget;
@@ -17,7 +17,7 @@ export const Filter = () => {
       <InputSearch
         type="text"
         name="filter"
-        value={filterPhonebook}
+        value={filterPhoneBook}
         title="Enter the name"
         required
         onChange={onChangeFilter}

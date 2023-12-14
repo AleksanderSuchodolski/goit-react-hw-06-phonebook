@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const ContactsList = styled.ul`
-  padding: opx;
+  padding: 0px;
   border: 5px solid skyblue;
   width: 420px;
   border-radius: 15px;
@@ -17,7 +17,7 @@ export const Contact = styled.li`
   border-bottom: 1px solid skyblue;
 `;
 
-export const ButtonRemowe = styled.button`
+export const ButtonRemove = styled.button`
   height: 30px;
   width: 100px;
   padding: 4px;
