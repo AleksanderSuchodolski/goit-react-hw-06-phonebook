@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Form, Input, Label, ButtonAdd } from './ContactForm.styled';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, getPhoneBookValue } from '../../redux/phoneBookSlice';
+import { getPhoneBookValue } from '../../redux/selektor';
+import { addContact } from '../../redux/phoneBookSlice';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
