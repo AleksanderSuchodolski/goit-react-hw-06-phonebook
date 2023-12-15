@@ -14,7 +14,7 @@ const phoneBookSlice = createSlice({
   initialState: contactInitialState,
   reducers: {
     addContact(state, action) {
-      return [...state.contacts, action.payload];
+      return [...state, action.payload];
     },
     delContact(state, action) {
       return state.filter(contact => contact.id !== action.payload);
